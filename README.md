@@ -56,4 +56,5 @@
 
 ## Лицензия
 
-Делай что хочешь.
+Делай что хочешь. (только звёздочку поставь )) <img width="180" height="48" alt="image" src="https://github.com/user-attachments/assets/50f8a94b-a80e-4ca3-a5bb-1b830bc22d7e" />
+
