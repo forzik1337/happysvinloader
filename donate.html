@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>донаты — clipper</title>
+<style>
+  :root{
+    --bg:#0e0e10;
+    --bg-soft:#18181b;
+    --purple:#9146FF;
+    --purple-soft:#772ce8;
+    --text:#efeff1;
+    --text-dim:#adadb8;
+    --border:#26262c;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  .glow{
+    position:fixed; top:50%; left:50%;
+    width:900px; height:900px;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(145,70,255,0.12) 0%, rgba(145,70,255,0) 65%);
+    pointer-events:none; z-index:0;
+  }
+  .sidebar{
+    position:fixed; top:0; left:0; height:100vh; width:90px;
+    display:flex; flex-direction:column; align-items:center;
+    padding:24px 0; border-right:1px solid var(--border); z-index:10;
+    background:var(--bg);
+  }
+  .sidebar .top,.sidebar .bottom{display:flex; flex-direction:column; align-items:center; gap:28px;}
+  .sidebar .spacer{flex:1;}
+  .nav-item{display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--text-dim); font-size:10px; letter-spacing:0.04em; cursor:pointer; transition:color .15s ease; text-decoration:none;}
+  .nav-item:hover{color:var(--text);}
+  .nav-item.active{color:var(--purple);}
+  .nav-item svg{width:20px; height:20px;}
+  .logo-mark{width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:linear-gradient(135deg, var(--purple), var(--purple-soft)); margin-bottom:8px;}
+
+  main{
+    margin-left:90px; min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:40px 24px; position:relative; z-index:1;
+  }
+
+  .donate-card{
+    width:100%; max-width:480px;
+    background:var(--bg-soft); border:1px solid var(--border);
+    border-radius:16px; padding:40px 36px;
+    display:flex; flex-direction:column; align-items:center; gap:24px;
+    animation:fadeIn .3s ease;
+  }
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  .donate-icon{
+    width:64px; height:64px; border-radius:16px;
+    background:linear-gradient(135deg, var(--purple), var(--purple-soft));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .donate-icon svg{width:30px; height:30px; color:#fff;}
+
+  .donate-title{font-size:20px; color:var(--text); letter-spacing:0.02em;}
+  .donate-desc{font-size:13px; color:var(--text-dim); text-align:center; line-height:1.7; letter-spacing:0.03em;}
+
+  .donate-btn{
+    display:flex; align-items:center; gap:10px;
+    background:var(--purple); color:#fff;
+    padding:14px 28px; border-radius:10px;
+    font-family:inherit; font-size:14px; letter-spacing:0.04em;
+    text-decoration:none; border:none; cursor:pointer;
+    transition:background .15s ease, transform .1s ease;
+    width:100%; justify-content:center;
+  }
+  .donate-btn:hover{background:var(--purple-soft);}
+  .donate-btn:active{transform:scale(0.98);}
+  .donate-btn svg{width:16px; height:16px;}
+
+  .donate-note{font-size:11px; color:#4b4b54; text-align:center; line-height:1.6;}
+
+  footer{position:fixed; bottom:0; left:90px; right:0; text-align:center; padding:18px 0; color:#4b4b54; font-size:11px; letter-spacing:0.05em; z-index:5;}
+
+  @media(max-width:640px){
+    .sidebar{width:64px;}
+    .nav-item{font-size:8px;}
+    main{margin-left:64px; padding:24px 16px;}
+    footer{left:64px;}
+    .donate-card{padding:28px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+
+<aside class="sidebar">
+  <div class="top">
+    <a href="index.html" class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 3v18l4-4h6l4-4V3H5z"/><path d="M9 8v4M14 8v4" stroke-linecap="round"/></svg>
+    </a>
+    <a href="index.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      скачать
+    </a>
+  </div>
+  <div class="spacer"></div>
+  <div class="bottom">
+    <a href="index.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009.1 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9.1a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      настройки
+    </a>
+    <a href="donate.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      донаты
+    </a>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17H9.5M3 6h18M5 6l1 14a2 2 0 002 2h8a2 2 0 002-2l1-14M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      новости
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      инфо
+    </div>
+  </div>
+</aside>
+
+<main>
+  <div class="donate-card">
+    <div class="donate-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="donate-title">поддержать автора</div>
+
+    <div class="donate-desc">
+        Сайт полностью бесплатный и без рекламы <br>
+        Я буду стараться делать его лучше, но всегда будет без рекламы <br>
+        Если ты хочешь поддержать меня то ссылка ниже
+    </div>
+
+    <a class="donate-btn" href="https://donatex.gg/donate/forzik1337" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      задонатить на donatex
+    </a>
+
+    <div class="donate-note">
+      откроется в новой вкладке · donatex.gg/donate/forzik1337
+    </div>
+  </div>
+</main>
+
+<footer>продолжая, ты идёшь нахуй ))</footer>
+
+</body>
+</html>
+EOF
