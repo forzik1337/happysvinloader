@@ -128,6 +128,42 @@ async function ytFetchInfo(url) {
   if (!res.ok) throw new Error(data.error || "не удалось получить данные о видео");
   return data;
 }
+
+// Проверяем статус cookies при загрузке страницы
+async function checkCookiesStatus() {
+  const res = await fetch(`${BACKEND_URL}/api/cookies-status`);
+  const data = await res.json();
+  const loadCookiesBtn = document.getElementById('loadCookiesBtn');
+  
+  if (loadCookiesBtn) {
+    if (data.has_cookies) {
+      loadCookiesBtn.style.display = 'none'; // Скрываем кнопку если cookies уже есть
+    } else {
+      loadCookiesBtn.style.display = 'flex';
+    }
+  }
+}
+
+// Загружаем cookies
+async function uploadCookies(cookiesText) {
+  const res = await fetch(`${BACKEND_URL}/api/upload-cookies`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cookies: cookiesText }),
+  });
+  
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error);
+  
+  // Скрываем кнопку после успешной загрузки
+  const loadCookiesBtn = document.getElementById('loadCookiesBtn');
+  if (loadCookiesBtn) {
+    loadCookiesBtn.style.display = 'none';
+  }
+}
+
+// Вызываем проверку при загрузке
+checkCookiesStatus();
 // Пример встраивания в общий обработчик ссылки (handleGo) в твоём app.js:
 //
 // if (isYoutubeUrl(raw)) {
