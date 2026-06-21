@@ -106,26 +106,26 @@
     </a>
     <a href="index.html" class="nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      скачать
+      <span data-i18n="nav_download">скачать</span>
     </a>
   </div>
   <div class="spacer"></div>
   <div class="bottom">
     <a href="index.html" class="nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009.1 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9.1a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      настройки
+      <span data-i18n="nav_settings">настройки</span>
     </a>
     <a href="donate.html" class="nav-item active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      донаты
+      <span data-i18n="nav_donate">донаты</span>
     </a>
     <div class="nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17H9.5M3 6h18M5 6l1 14a2 2 0 002 2h8a2 2 0 002-2l1-14M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      новости
+      <span data-i18n="nav_news">новости</span>
     </div>
     <div class="nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      инфо
+      <span data-i18n="nav_info">инфо</span>
     </div>
   </div>
 </aside>
@@ -136,9 +136,9 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
 
-    <div class="donate-title">поддержать автора</div>
+    <div class="donate-title" data-i18n="donate_title">поддержать автора</div>
 
-    <div class="donate-desc">
+    <div class="donate-desc" data-i18n="donate_desc">
         Сайт полностью бесплатный и без рекламы <br>
         Я буду стараться делать его лучше, но всегда будет без рекламы <br>
         Если ты хочешь поддержать меня то ссылка ниже
@@ -146,16 +146,57 @@
 
     <a class="donate-btn" href="https://donatex.gg/donate/forzik1337" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      задонатить на donatex
+      <span data-i18n="donate_btn">задонатить на donatex</span>
     </a>
 
-    <div class="donate-note">
+    <div class="donate-note" data-i18n="donate_note">
       откроется в новой вкладке · donatex.gg/donate/forzik1337
     </div>
   </div>
+  
 </main>
 
-<footer>продолжая, ты идёшь нахуй ))</footer>
+<footer data-i18n="footer">продолжая, ты идёшь нахуй ))</footer>
+
+<script>
+const TRANSLATIONS = {
+  ru: {
+    nav_download: 'скачать', nav_settings: 'настройки',
+    nav_donate: 'донаты', nav_news: 'новости', nav_info: 'инфо',
+    donate_title: 'поддержать автора',
+    donate_desc: 'Сайт полностью бесплатный и без рекламы\nЯ буду стараться делать его лучше, но всегда будет без рекламы\nЕсли ты хочешь поддержать меня то ссылка ниже',
+    donate_btn: 'задонатить на donatex',
+    donate_note: 'откроется в новой вкладке · donatex.gg/donate/forzik1337',
+    footer: 'продолжая, ты идёшь нахуй ))',
+  },
+  en: {
+    nav_download: 'download', nav_settings: 'settings',
+    nav_donate: 'donate', nav_news: 'news', nav_info: 'info',
+    donate_title: 'support the author',
+    donate_desc: 'The site is completely free and ad-free\nI\'ll keep making it better, but it\'ll always stay ad-free\nIf you want to support me, the link is below',
+    donate_btn: 'donate on donatex',
+    donate_note: 'opens in a new tab · donatex.gg/donate/forzik1337',
+    footer: 'by continuing you go fuck yourself ))',
+  }
+};
+
+(function(){
+  const lang = localStorage.getItem('twvod_lang') || 'ru';
+  const tr = TRANSLATIONS[lang] || TRANSLATIONS.ru;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (tr[key] !== undefined) {
+      // donate_desc has line breaks — preserve them as <br>
+      if (key === 'donate_desc') {
+        el.innerHTML = tr[key].replace(/\n/g, ' <br>\n        ');
+      } else {
+        el.textContent = tr[key];
+      }
+    }
+  });
+})();
+</script>
 
 </body>
 </html>

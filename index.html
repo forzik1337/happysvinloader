@@ -3,188 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> happysvinloader - новая эра, эволюция, полюция сайтов загрузщиков</title>
-<style>
-  :root{
-    --bg:#0e0e10;
-    --bg-soft:#18181b;
-    --purple:#9146FF;
-    --purple-soft:#772ce8;
-    --text:#efeff1;
-    --text-dim:#adadb8;
-    --border:#26262c;
-    --red:#eb4b4b;
-    --green:#3fce6e;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    min-height:100vh;
-    overflow-x:hidden;
-    position:relative;
-  }
-
-  .glow{
-    position:fixed;
-    top:50%; left:50%;
-    width:900px; height:900px;
-    transform:translate(-50%,-50%);
-    background:radial-gradient(circle, rgba(145,70,255,0.12) 0%, rgba(145,70,255,0) 65%);
-    pointer-events:none;
-    z-index:0;
-  }
-
-  .sidebar{
-    position:fixed; top:0; left:0; height:100vh; width:90px;
-    display:flex; flex-direction:column; align-items:center;
-    padding:24px 0; border-right:1px solid var(--border); z-index:10;
-  }
-  .sidebar .top, .sidebar .bottom{display:flex; flex-direction:column; align-items:center; gap:28px;}
-  .sidebar .spacer{flex:1;}
-  .nav-item{display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--text-dim); font-size:10px; letter-spacing:0.04em; cursor:pointer; transition:color .15s ease;}
-  .nav-item:hover{color:var(--text);}
-  .nav-item.active{color:var(--text);}
-  .nav-item svg{width:20px; height:20px;}
-  .logo-mark{width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:linear-gradient(135deg, var(--purple), var(--purple-soft)); margin-bottom:8px;}
-
-  .topbar{position:fixed; top:0; left:90px; right:0; height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 32px; z-index:10;}
-  .topbar .services{display:flex; align-items:center; gap:10px; color:var(--text-dim); font-size:12px; letter-spacing:0.08em;}
-  .topbar .services svg{width:14px;height:14px;}
-  .topbar .scroll-hint{width:34px; height:34px; border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-dim);}
-
-  main{margin-left:90px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 24px; position:relative; z-index:1;}
-
-  .mascot{width:120px; height:120px; margin-bottom:14px; position:relative;}
-
-  .tagline{color:var(--text-dim); font-size:13px; letter-spacing:0.12em; text-transform:lowercase; margin-bottom:30px;}
-  .tagline .accent{color:var(--purple);}
-
-  .input-row{display:flex; width:100%; max-width:720px; gap:10px;}
-  .input-wrap{flex:1; display:flex; align-items:center; gap:10px; background:var(--bg-soft); border:1px solid var(--border); border-radius:10px; padding:0 18px; height:52px; transition:border-color .15s ease, box-shadow .15s ease;}
-  .input-wrap:focus-within{border-color:var(--purple-soft); box-shadow:0 0 0 3px rgba(145,70,255,0.15);}
-  .input-wrap svg{width:16px; height:16px; color:var(--text-dim); flex-shrink:0;}
-  .input-wrap input{flex:1; background:transparent; border:none; outline:none; color:var(--text); font-family:inherit; font-size:14px;}
-  .input-wrap input::placeholder{color:#5c5c66;}
-  .clear-btn{background:none; border:none; color:var(--text-dim); cursor:pointer; display:flex; align-items:center; flex-shrink:0;}
-  .clear-btn svg{width:14px;height:14px;}
-
-  .go-btn{width:52px; height:52px; background:var(--purple); border:none; border-radius:10px; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .15s ease, transform .1s ease; flex-shrink:0;}
-  .go-btn:hover{background:var(--purple-soft);}
-  .go-btn:active{transform:scale(0.95);}
-  .go-btn svg{width:18px; height:18px;}
-  .go-btn.loading svg{animation:spin 0.8s linear infinite;}
-  @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-  .go-btn:disabled{opacity:0.6; cursor:default;}
-
-  .options-row{display:flex; width:100%; max-width:720px; margin-top:14px; gap:10px; align-items:center;}
-  .pill-group{display:flex; gap:8px; flex-wrap:wrap;}
-  .pill{display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:8px; border:1px solid var(--border); background:var(--bg-soft); color:var(--text-dim); font-size:12.5px; font-family:inherit; letter-spacing:0.03em; cursor:pointer; transition:all .15s ease;}
-  .pill svg{width:14px;height:14px;}
-  .pill.active{background:rgba(145,70,255,0.12); border-color:var(--purple-soft); color:#d8c4ff;}
-  .pill:hover:not(.active){border-color:#3a3a42; color:var(--text);}
-
-  .options-row .spacer{flex:1;}
-  .paste-btn{display:flex; align-items:center; gap:8px; padding:9px 16px; background:var(--bg-soft); border:1px solid var(--border); border-radius:8px; color:var(--text-dim); font-size:12.5px; font-family:inherit; cursor:pointer; transition:all .15s ease;}
-  .paste-btn svg{width:14px;height:14px;}
-  .paste-btn:hover{border-color:#3a3a42; color:var(--text);}
-
-  .examples{margin-top:24px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; max-width:720px;}
-  .example-chip{font-size:11px; color:#5c5c66; padding:5px 10px; border:1px solid var(--border); border-radius:6px; letter-spacing:0.04em;}
-  .example-chip b{color:var(--text-dim); font-weight:600;}
-
-  .result{ width:100%; max-width:720px; margin-top:22px; display:none; }
-  .result.show{display:block; animation:fadeIn .25s ease;}
-  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
-
-  .status-msg{
-    font-size:12.5px; padding:12px 16px; border-radius:8px;
-    border:1px solid var(--border); background:var(--bg-soft); color:var(--text-dim);
-    display:flex; align-items:center; gap:10px;
-  }
-  .status-msg.error{border-color:rgba(235,75,75,0.4); color:#ffb3b3; background:rgba(235,75,75,0.08);}
-  .status-msg svg{width:15px; height:15px; flex-shrink:0;}
-
-  .preview-card{ display:flex; gap:14px; background:var(--bg-soft); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:12px; }
-  .preview-thumb{ width:120px; height:68px; border-radius:6px; object-fit:cover; background:#000; flex-shrink:0; }
-  .preview-info{flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; justify-content:center;}
-  .preview-title{font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .preview-meta{font-size:11px; color:var(--text-dim);}
-
-  .quality-list{display:flex; flex-direction:column; gap:8px;}
-  .quality-row{ display:flex; align-items:center; justify-content:space-between; background:var(--bg-soft); border:1px solid var(--border); border-radius:8px; padding:11px 16px; }
-  .quality-row .label{font-size:13px; color:var(--text);}
-  .quality-row .sub{font-size:11px; color:var(--text-dim); margin-top:2px;}
-  .dl-btn{ display:flex; align-items:center; gap:7px; background:var(--purple); border:none; color:#fff; padding:8px 14px; border-radius:7px; font-size:12px; font-family:inherit; cursor:pointer; transition:background .15s ease; text-decoration:none; }
-  .dl-btn:hover{background:var(--purple-soft);}
-  .dl-btn svg{width:13px;height:13px;}
-
-  .hint-box{ margin-top:10px; font-size:11px; color:#5c5c66; line-height:1.6; padding:10px 14px; border:1px dashed var(--border); border-radius:8px; }
-  .hint-box code{ display:inline-block; margin-top:4px; color:var(--text-dim); background:#000; padding:2px 6px; border-radius:4px; }
-
-  /* --- range / trim UI --- */
-  .trim-box{ background:var(--bg-soft); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:12px; }
-  .trim-row{ display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
-  .trim-row label{ font-size:12px; color:var(--text-dim); white-space:nowrap; }
-  .quality-select{ background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:7px; padding:7px 10px; font-family:inherit; font-size:12.5px; cursor:pointer; }
-  .quality-select:focus{ outline:none; border-color:var(--purple-soft); }
-  .trim-desc{ font-size:11.5px; color:var(--text-dim); line-height:1.6; margin-bottom:16px; }
-  .trim-desc .accent{ color:var(--purple); }
-
-  .slider-wrap{ position:relative; width:100%; height:44px; margin-bottom:30px; padding:0 2px; }
-  .slider-loading{ font-size:11.5px; color:var(--text-dim); padding:10px 0; }
-  .slider-track{ position:absolute; top:18px; left:0; right:0; height:8px; background:#2c2c33; border-radius:5px; }
-  .slider-range{ position:absolute; top:18px; height:8px; background:var(--purple); border-radius:5px; }
-  .slider-thumb{
-    position:absolute; top:9px; width:24px; height:24px; border-radius:7px;
-    cursor:grab; touch-action:none; box-shadow:0 1px 4px rgba(0,0,0,0.5);
-    border:2px solid var(--bg-soft);
-  }
-  .slider-thumb:active{ cursor:grabbing; }
-  .slider-thumb.start{ background:var(--purple); z-index:3; }
-  .slider-thumb.end{ background:#efeff1; z-index:2; }
-  .slider-tag{
-    position:absolute; top:32px; transform:translateX(-50%);
-    background:#000; color:#fff; font-size:10.5px; letter-spacing:0.02em;
-    padding:3px 7px; border-radius:5px; white-space:nowrap; pointer-events:none;
-  }
-  .slider-tag input{
-    background:transparent; border:none; color:#fff; font-family:inherit; font-size:10.5px;
-    width:74px; text-align:center; pointer-events:auto; outline:none;
-  }
-  .slider-tag.start{ border:1px solid var(--purple-soft); }
-
-  .dl-actions{ display:flex; gap:10px; flex-wrap:wrap; }
-  .dl-actions .dl-btn{ padding:10px 16px; font-size:12.5px; }
-  .dl-btn.secondary{ background:var(--bg); border:1px solid var(--border); color:var(--text); }
-  .dl-btn.secondary:hover{ border-color:#3a3a42; background:#1f1f24; }
-  .dl-btn:disabled{ opacity:0.5; cursor:default; pointer-events:none; }
-
-  .warn-line{ margin-top:10px; font-size:11px; color:#e0a64b; line-height:1.6; }
-
-  .progress-box{ margin-top:12px; display:none; }
-  .progress-box.show{ display:block; }
-  .progress-track{ width:100%; height:6px; background:#2c2c33; border-radius:4px; overflow:hidden; }
-  .progress-fill{ height:100%; width:0%; background:var(--purple); transition:width .15s ease; }
-  .progress-label{ font-size:11px; color:var(--text-dim); margin-top:6px; }
-
-  footer{position:fixed; bottom:0; left:90px; right:0; text-align:center; padding:18px 0; color:#4b4b54; font-size:11px; letter-spacing:0.05em; z-index:5;}
-
-  @media (max-width: 640px){
-    .sidebar{width:64px;}
-    .sidebar .nav-item{font-size:8px;}
-    .topbar{left:64px; padding:0 16px;}
-    main{margin-left:64px; padding:24px 16px;}
-    footer{left:64px;}
-    .preview-card{flex-direction:column;}
-    .preview-thumb{width:100%; height:140px;}
-  }
-</style>
+<title>happybotloader - новая эра, эволюция полюция сайтов для загрузки хуйни</title>
+<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
 <div class="glow"></div>
+
+<div class="settings-overlay" id="settingsOverlay"></div>
+<div class="settings-panel" id="settingsPanel">
+  <div class="settings-header">
+    <span class="settings-title" data-i18n="settings">настройки</span>
+    <button class="settings-close" id="settingsClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="settings-body">
+    <div>
+      <div class="settings-section-title" data-i18n="proxy_title">прокси</div>
+      <div class="radio-group">
+        <div class="radio-option selected" id="proxyDefaultOpt" onclick="selectProxy('default')">
+          <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+          <div class="radio-label">
+            <div class="radio-label-main" data-i18n="proxy_default">по умолчанию</div>
+            <div class="radio-label-sub" data-i18n="proxyused">дефолтный прокси</div>
+          </div>
+        </div>
+        <div class="radio-option" id="proxyCustomOpt" onclick="selectProxy('custom')">
+          <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+          <div class="radio-label">
+            <div class="radio-label-main" data-i18n="proxy_custom">свой прокси</div>
+            <div class="radio-label-sub" data-i18n="proxy_custom_sub">вставь адрес воркера</div>
+          </div>
+        </div>
+        <div class="radio-option" id="proxyOffOpt" onclick="selectProxy('off')">
+          <div class="radio-dot"><div class="radio-dot-inner"></div></div>
+          <div class="radio-label">
+            <div class="radio-label-main" data-i18n="proxy_off">выключен</div>
+            <div class="radio-label-sub" data-i18n="proxy_off_sub">ползунок и скачивание одним файлом не будут работать</div>
+          </div>
+        </div>
+      </div>
+      <div class="proxy-input-wrap" id="proxyInputWrap">
+        <input class="proxy-input" id="proxyCustomInput" placeholder="https://твой-воркер.workers.dev/?url=">
+        <button class="proxy-save-btn" onclick="saveCustomProxy()" data-i18n="save">сохранить</button>
+      </div>
+    </div>
+    <div>
+      <div class="settings-section-title" data-i18n="theme_title">тема</div>
+      <div class="theme-group">
+        <button class="theme-btn" id="themeDark" onclick="setTheme('dark')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="theme_dark">тёмная</span>
+        </button>
+        <button class="theme-btn" id="themeLight" onclick="setTheme('light')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round"/></svg>
+          <span data-i18n="theme_light">светлая</span>
+        </button>
+        <button class="theme-btn" id="themeAuto" onclick="setTheme('auto')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4" stroke-linecap="round"/></svg>
+          <span data-i18n="theme_auto">система</span>
+        </button>
+      </div>
+    </div>
+    <div>
+      <div class="settings-section-title" data-i18n="lang_title">язык / language</div>
+      <div class="lang-group">
+        <button class="lang-btn selected" id="langRu" onclick="setLang('ru')">🇷🇺 русский</button>
+        <button class="lang-btn" id="langEn" onclick="setLang('en')">🇬🇧 english</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <aside class="sidebar">
   <div class="top">
@@ -193,26 +83,26 @@
     </div>
     <div class="nav-item active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      скачать
+      <span data-i18n="nav_download">скачать</span>
     </div>
   </div>
   <div class="spacer"></div>
   <div class="bottom">
-    <div class="nav-item" id="settingsNavItem" style="cursor:pointer;">
+    <div class="nav-item" id="settingsNavItem">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009.1 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9.1a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      настройки
+      <span data-i18n="nav_settings">настройки</span>
     </div>
-    <div class="nav-item">
+    <a href="donate.html" class="nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      донаты
-    </div>
+      <span data-i18n="nav_donate">донаты</span>
+    </a>
     <div class="nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 17H9.5M3 6h18M5 6l1 14a2 2 0 002 2h8a2 2 0 002-2l1-14M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      новости
+      <span data-i18n="nav_news">новости</span>
     </div>
     <div class="nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      инфо
+      <span data-i18n="nav_info">инфо</span>
     </div>
   </div>
 </aside>
@@ -220,7 +110,7 @@
 <div class="topbar">
   <div class="services">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
-    только твич!!!! (мб потом будет и другое)
+    <span data-i18n="topbar_text">happybotloader · twitch + soundcloud</span>
   </div>
   <div class="scroll-hint">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m0 0l-6-6m6 6l6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -237,12 +127,25 @@
     </svg>
   </div>
 
-  <p class="tagline"> самый пиздатый сайт для скачивания <span class="accent">vod/clip</span></p>
+  <p class="tagline"><span data-i18n="tagline">самый пиздатый сайт для скачивания</span> <span class="accent" id="taglineAccent">vod/clip</span></p>
+
+  <div class="service-switch">
+    <button class="service-pill active twitch" id="svcTwitch" onclick="switchService('twitch')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 2L2 6v14h5v3h3l3-3h4l6-6V2H4zm16 10l-3 3h-5l-3 3v-3H6V4h14v8zm-5-7h2v6h-2V5zm-5 0h2v6h-2V5z"/></svg>
+      <span>Twitch</span>
+    </button>
+    <button class="service-pill soundcloud" id="svcSoundcloud" onclick="switchService('soundcloud')">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
+        <path d="M1.175 12.225c-.051 0-.094.041-.101.1l-.233 2.154.233 2.105c.007.059.05.099.101.099.05 0 .09-.04.099-.099l.255-2.105-.27-2.154c-.009-.06-.05-.1-.1-.1m-.899.828c-.06 0-.091.037-.104.094L0 14.479l.165 1.308c.014.057.045.094.104.094.06 0 .09-.037.104-.094l.21-1.308-.21-1.332c-.014-.057-.045-.094-.104-.094m1.83-1.229c-.06 0-.12.045-.12.104l-.21 2.563.225 2.434c.015.06.06.119.12.119.061 0 .105-.059.12-.119l.24-2.434-.24-2.563c-.015-.06-.059-.104-.12-.104m.945-.089c-.075 0-.135.06-.15.135l-.193 2.64.21 2.458c.015.075.075.135.15.135.075 0 .135-.06.15-.135l.24-2.458-.24-2.64c-.015-.075-.075-.135-.15-.135m1.005-.374c-.09 0-.165.074-.18.164l-.18 2.834.195 2.458c.015.09.09.165.18.165.09 0 .165-.075.18-.165l.225-2.458-.225-2.834c-.015-.09-.09-.164-.18-.164m1.035.449c-.105 0-.18.09-.195.18l-.165 2.384.18 2.439c.015.104.09.18.195.18.104 0 .18-.076.195-.18l.21-2.439-.21-2.384c-.015-.09-.09-.18-.195-.18m1.05-.674c-.12 0-.21.09-.225.209l-.15 2.609.165 2.415c.015.12.105.21.225.21.12 0 .21-.09.225-.21l.18-2.415-.18-2.609c-.015-.12-.105-.209-.225-.209m1.064-.299c-.135 0-.225.105-.24.225l-.135 2.534.15 2.399c.015.135.105.24.24.24.135 0 .225-.105.24-.24l.165-2.399-.165-2.534c-.015-.12-.105-.225-.24-.225m1.08-.39c-.15 0-.255.12-.27.255l-.12 2.474.135 2.384c.015.15.12.27.27.27.15 0 .255-.12.27-.27l.15-2.384-.15-2.474c-.015-.135-.12-.255-.27-.255m1.11-.195c-.165 0-.285.12-.3.285l-.105 2.264.12 2.355c.015.165.135.285.3.285.165 0 .285-.12.3-.285l.135-2.355-.135-2.264c-.015-.165-.135-.285-.3-.285m2.505 1.305c-.075 0-.135.03-.195.075-.165-1.815-1.695-3.225-3.555-3.225-.525 0-1.035.135-1.485.36-.18.09-.225.18-.225.345v8.25c0 .18.135.33.315.345h5.145c1.035 0 1.875-.84 1.875-1.875s-.84-1.875-1.875-1.875"/>
+    </svg>
+    <span>SoundCloud</span>
+    </button>
+  </div>
 
   <div class="input-row">
-    <div class="input-wrap">
+    <div class="input-wrap" id="inputWrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.07 0l1.93-1.93a5 5 0 10-7.07-7.07L10.5 5.5M14 11a5 5 0 00-7.07 0L5 12.93a5 5 0 107.07 7.07l1.43-1.43" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <input id="urlInput" type="text" placeholder="https://www.twitch.tv/videos/... или /clip/...">
+      <input id="urlInput" type="text" data-i18n-placeholder="input_placeholder" placeholder="https://www.twitch.tv/videos/... или /clip/...">
       <button class="clear-btn" id="clearBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg></button>
     </div>
     <button class="go-btn" id="goBtn">
@@ -254,619 +157,31 @@
     <div class="pill-group">
       <button class="pill active">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/></svg>
-        авто
+        <span data-i18n="auto">авто</span>
       </button>
     </div>
     <div class="spacer"></div>
     <button class="paste-btn" id="pasteBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      вставить
+      <span data-i18n="paste">вставить</span>
     </button>
   </div>
 
-  <div class="examples">
-    <span class="example-chip"><b>клипы</b> — twitch.tv/&lt;канал&gt;/clip/...</span>
+  <div class="examples" id="examples">
+    <span class="example-chip"><b data-i18n="clips">клипы</b> — twitch.tv/&lt;канал&gt;/clip/...</span>
     <span class="example-chip"><b>vod</b> — twitch.tv/videos/&lt;id&gt;</span>
   </div>
 
   <div class="result" id="result"></div>
 </main>
 
-<footer>продолжая, ты идёшь нахуй ))</footer>
+<footer><span data-i18n="footer">продолжая, ты идёшь нахуй ))</span></footer>
 
-<script>
-const GQL_URL = "https://gql.twitch.tv/gql";
-const CLIENT_ID = "kimne78kx3ncx6brgo4mv6wki5h1ko"; // публичный client-id веб-плеера twitch
-
-const urlInput = document.getElementById('urlInput');
-const goBtn = document.getElementById('goBtn');
-const result = document.getElementById('result');
-const clearBtn = document.getElementById('clearBtn');
-const pasteBtn = document.getElementById('pasteBtn');
-
-let vodState = null; // { id, title, author, qualities, playlistUrl, qualityIdx, segments, total, start, end }
-
-// --- CORS proxy support ---
-// usher.ttvnw.net / Twitch CDN don't send Access-Control-Allow-Origin, so direct
-// fetch() from any browser page (regardless of where it's hosted) gets blocked.
-// To build the trim slider we need to read the playlist contents in JS, which means
-// the request has to go through a small server-side proxy that re-sends it with
-// permissive CORS headers. Set this via the "настройки" sidebar item, or hardcode
-// PROXY_BASE below. Expected format: a URL prefix that the target URL gets
-// URL-encoded and appended to, e.g. "https://your-worker.workers.dev/?url="
-let PROXY_BASE = localStorage.getItem('twvod_proxy')?.trim() || 'https://super-block-092b.gameforzi2000.workers.dev/?url=';
-
-function proxiedFetch(url, opts){
-  if(PROXY_BASE) return fetch(PROXY_BASE + encodeURIComponent(url), opts);
-  return fetch(url, opts);
-}
-
-clearBtn.onclick = () => { urlInput.value=''; urlInput.focus(); hideResult(); };
-pasteBtn.onclick = async () => {
-  try{ const t = await navigator.clipboard.readText(); urlInput.value = t; }catch(e){}
-};
-urlInput.addEventListener('keydown', e => { if(e.key === 'Enter') handleGo(); });
-goBtn.onclick = handleGo;
-
-function hideResult(){ result.classList.remove('show'); result.innerHTML=''; }
-
-function setLoading(on){
-  goBtn.disabled = on;
-  goBtn.classList.toggle('loading', on);
-}
-
-function showStatus(msg, isError){
-  result.innerHTML = `<div class="status-msg ${isError?'error':''}">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    ${msg}
-  </div>`;
-  result.classList.add('show');
-}
-
-function parseUrl(raw){
-  raw = raw.trim();
-  let m = raw.match(/twitch\.tv\/videos\/(\d+)/);
-  if(m) return { type:'vod', id:m[1] };
-  m = raw.match(/twitch\.tv\/[^\/]+\/clip\/([A-Za-z0-9_-]+)/);
-  if(m) return { type:'clip', slug:m[1] };
-  m = raw.match(/clips\.twitch\.tv\/([A-Za-z0-9_-]+)/);
-  if(m) return { type:'clip', slug:m[1] };
-  return null;
-}
-
-async function gql(body){
-  const res = await fetch(GQL_URL, {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json', 'Client-ID': CLIENT_ID },
-    body: JSON.stringify(body)
-  });
-  if(!res.ok) throw new Error('Запрос к Twitch не удался ('+res.status+')');
-  return res.json();
-}
-
-async function handleGo(){
-  const raw = urlInput.value;
-  const parsed = parseUrl(raw);
-  if(!parsed){
-    showStatus('Не понимаю эту ссылку. Нужна ссылка на клип или VOD twitch.tv', true);
-    return;
-  }
-  setLoading(true);
-  hideResult();
-  showStatus('тяну данные с twitch...');
-  try{
-    if(parsed.type === 'clip') await resolveClip(parsed.slug);
-    else await resolveVod(parsed.id);
-  }catch(err){
-    showStatus('Не получилось: ' + err.message + '. Возможно видео приватное, удалено, или Twitch поменял API.', true);
-  }finally{
-    setLoading(false);
-  }
-}
-
-async function resolveClip(slug){
-  const body = {
-    operationName: "VideoAccessToken_Clip",
-    query: `query VideoAccessToken_Clip($slug: ID!) {
-      clip(slug: $slug) {
-        id
-        title
-        thumbnailURL
-        broadcaster { displayName }
-        videoQualities { frameRate quality sourceURL }
-        playbackAccessToken(params: {platform: "web", playerBackend: "mediaplayer", playerType: "embed"}) {
-          signature value
-        }
-      }
-    }`,
-    variables: { slug }
-  };
-  const data = await gql(body);
-  const clip = data?.data?.clip;
-  if(!clip || !clip.playbackAccessToken) throw new Error('клип не найден');
-
-  const token = clip.playbackAccessToken;
-  const qualities = (clip.videoQualities || []).slice().sort((a,b)=> (b.quality - a.quality));
-
-  const urls = qualities.map(q => {
-    const u = new URL(q.sourceURL);
-    u.searchParams.set('sig', token.signature);
-    u.searchParams.set('token', token.value);
-    return { quality: q.quality+'p'+(q.frameRate?('@'+Math.round(q.frameRate)):''), url: u.toString() };
-  });
-
-  renderClipResult(clip, urls);
-}
-
-function renderClipResult(clip, urls){
-  let html = `<div class="preview-card">
-    <img class="preview-thumb" src="${clip.thumbnailURL || ''}" onerror="this.style.display='none'">
-    <div class="preview-info">
-      <div class="preview-title">${escapeHtml(clip.title || 'без названия')}</div>
-      <div class="preview-meta">${escapeHtml(clip.broadcaster?.displayName || '')} · клип</div>
-    </div>
-  </div>
-  <div class="quality-list">`;
-  if(urls.length === 0){
-    html += `<div class="status-msg error">не нашлось доступных вариантов качества</div>`;
-  }
-  for(const v of urls){
-    html += `<div class="quality-row">
-      <div><div class="label">${v.quality}</div></div>
-      <a class="dl-btn" href="${v.url}" target="_blank" rel="noopener" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        скачать
-      </a>
-    </div>`;
-  }
-  html += `</div>`;
-  result.innerHTML = html;
-  result.classList.add('show');
-}
-
-async function resolveVod(id){
-  const body = {
-    operationName: "PlaybackAccessToken_Template",
-    query: `query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {
-      streamPlaybackAccessToken(channelName: $login, params: {platform: "web", playerBackend: "mediaplayer", playerType: $playerType}) @include(if: $isLive) { value signature __typename }
-      videoPlaybackAccessToken(id: $vodID, params: {platform: "web", playerBackend: "mediaplayer", playerType: $playerType}) @include(if: $isVod) { value signature __typename }
-    }`,
-    variables: { isLive:false, login:"", isVod:true, vodID:id, playerType:"site" }
-  };
-  const data = await gql(body);
-  const token = data?.data?.videoPlaybackAccessToken;
-  if(!token) throw new Error('не удалось получить токен доступа (видео может быть приватным/подписочным)');
-
-  const metaBody = {
-    operationName: "VideoMetadata",
-    query: `query VideoMetadata($videoID: ID!) {
-      video(id: $videoID) { id title lengthSeconds previewThumbnailURL owner { displayName } }
-    }`,
-    variables: { videoID: id }
-  };
-  let meta = null;
-  try{
-    const metaData = await gql(metaBody);
-    meta = metaData?.data?.video;
-  }catch(e){}
-
-  const playlistParams = new URLSearchParams({
-    sig: token.signature,
-    token: token.value,
-    allow_source: 'true',
-    allow_audio_only: 'true',
-    allow_spectre: 'false',
-    p: String(Math.floor(Math.random()*1000000)),
-    player: 'twitchweb',
-    player_backend: 'mediaplayer',
-    playlist_include_framerate: 'true',
-    reassignments_supported: 'true',
-    supported_codecs: 'avc1',
-    fast_bread: 'true'
-  });
-  const playlistUrl = `https://usher.ttvnw.net/vod/${id}.m3u8?${playlistParams.toString()}`;
-
-  let qualities = [];
-  let qualitiesError = null;
-  try{
-    const plRes = await proxiedFetch(playlistUrl);
-    const text = await plRes.text();
-    if(!plRes.ok){
-      throw new Error(`usher ответил ${plRes.status}: ${text.slice(0,180).replace(/\s+/g,' ')}`);
-    }
-    qualities = parseMasterPlaylist(text);
-    if(!qualities.length){
-      qualitiesError = 'плейлист получен, но в нём не нашлось ни одного варианта качества (формат ответа мог измениться)';
-      console.warn('master playlist body:', text.slice(0, 1000));
-    }
-  }catch(e){
-    qualitiesError = (e && e.message) ? e.message : String(e);
-    console.error('master playlist fetch failed:', e);
-  }
-
-  renderVodResult(meta, id, qualities, playlistUrl, qualitiesError);
-}
-
-function parseMasterPlaylist(text){
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length);
-  const out = [];
-  let pendingName = null;
-  for(let i=0;i<lines.length;i++){
-    const line = lines[i];
-    if(line.startsWith('#EXT-X-MEDIA') && line.includes('NAME=')){
-      const m = line.match(/NAME="([^"]+)"/);
-      if(m) pendingName = m[1];
-      continue;
-    }
-    if(line.startsWith('#EXT-X-STREAM-INF')){
-      const resMatch = line.match(/RESOLUTION=(\d+x\d+)/);
-      const fpsMatch = line.match(/FRAME-RATE=([\d.]+)/);
-      let j = i+1;
-      while(j < lines.length && lines[j].startsWith('#')) j++;
-      const urlLine = lines[j];
-      if(urlLine && urlLine.startsWith('http')){
-        const name = pendingName || (resMatch ? resMatch[1] + (fpsMatch ? ('@'+Math.round(parseFloat(fpsMatch[1]))) : '') : ('качество '+(out.length+1)));
-        out.push({ name, url: urlLine });
-      }
-      pendingName = null;
-    }
-  }
-  return out;
-}
-
-function renderVodResult(meta, id, qualities, playlistUrl, qualitiesError){
-  const title = meta?.title || ('VOD #'+id);
-  const author = meta?.owner?.displayName || '';
-  const thumb = meta?.previewThumbnailURL || '';
-  const fallbackTotal = meta?.lengthSeconds || 0;
-
-  vodState = { id, title, author, qualities, playlistUrl, qualityIdx:0, segments:null, total:fallbackTotal, start:0, end:fallbackTotal };
-
-  let html = `<div class="preview-card">
-    <img class="preview-thumb" src="${thumb}" onerror="this.style.display='none'">
-    <div class="preview-info">
-      <div class="preview-title">${escapeHtml(title)}</div>
-      <div class="preview-meta">${escapeHtml(author)} · vod</div>
-    </div>
-  </div>`;
-
-  if(qualities.length){
-    let defaultIdx = qualities.findIndex(q => /source/i.test(q.name));
-    if(defaultIdx < 0) defaultIdx = 0;
-    vodState.qualityIdx = defaultIdx;
-    const qualityOptions = qualities.map((q,i)=> `<option value="${i}" ${i===defaultIdx?'selected':''}>${escapeHtml(q.name)}</option>`).join('');
-
-    html += `<div class="trim-box">
-      <div class="trim-row">
-        <label for="qualitySelect">качество</label>
-        <select class="quality-select" id="qualitySelect">${qualityOptions}</select>
-      </div>
-      <div class="trim-desc">
-        Ползунком задай начало и конец участка VOD для скачивания.
-        Время под ползунком можно ввести вручную, формат <span class="accent">ЧЧhММmССs</span> (например 00h08m50s).
-      </div>
-      <div id="sliderArea"><div class="slider-loading">тяну список сегментов...</div></div>
-      <div class="dl-actions">
-        <button class="dl-btn" id="dlOneFileBtn" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          скачать одним файлом
-        </button>
-        <button class="dl-btn secondary" id="dlPlaylistBtn" disabled>обрезанный .m3u8</button>
-        <a class="dl-btn secondary" href="${playlistUrl}" target="_blank" rel="noopener">весь VOD (.m3u8)</a>
-      </div>
-      <div class="warn-line">Если используешь «скачать одним файлом» — держи эту вкладку открытой, пока идёт загрузка, иначе файл может не докачаться.</div>
-      <div class="progress-box" id="progressBox">
-        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="progress-label" id="progressLabel">0%</div>
-      </div>
-    </div>`;
-  } else {
-    const isCorsLike = /Failed to fetch|NetworkError|CORS|TypeError/i.test(qualitiesError || '');
-    html += `<div class="status-msg error">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      не получилось получить список качеств для ползунка: ${escapeHtml(qualitiesError || 'неизвестная ошибка')}.
-      ${isCorsLike
-        ? 'Похоже на CORS-блокировку — Twitch CDN не отдаёт заголовок Access-Control-Allow-Origin, поэтому браузер режет запрос вне зависимости от того, где хостится эта страница. Без CORS-прокси ползунок не построить, см. кнопку ниже.'
-        : 'Если в консоли браузера (F12 → Console/Network) видна CORS-ошибка — то же самое: нужен CORS-прокси, см. кнопку ниже.'}
-    </div>
-    <div class="quality-row">
-      <div><div class="label">мастер-плейлист</div><div class="sub">все качества внутри, без ползунка</div></div>
-      <a class="dl-btn" href="${playlistUrl}" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        открыть
-      </a>
-    </div>
-    <div class="dl-actions" style="margin-top:10px;">
-      <button class="dl-btn secondary" onclick="document.getElementById('settingsNavItem').click()">⚙ настроить CORS-прокси</button>
-      <button class="dl-btn secondary" onclick="handleGo()">↻ попробовать снова</button>
-    </div>`;
-  }
-
-  html += `<div class="hint-box">
-    VOD хранится у Twitch как HLS-поток (набор .ts-кусочков), а не единый mp4-файл.
-    «Скачать одним файлом» сам склеит нужные кусочки прямо в браузере. Если диапазон большой
-    или хочешь собрать файл сам — возьми «обрезанный .m3u8» (только выбранный участок) или
-    «весь VOD (.m3u8)» и склей через ffmpeg/VLC:<br>
-    <code>ffmpeg -i "ссылка.m3u8" -c copy video.mp4</code>
-  </div>`;
-
-  result.innerHTML = html;
-  result.classList.add('show');
-
-  if(qualities.length){
-    document.getElementById('qualitySelect').addEventListener('change', e => loadQualitySegments(parseInt(e.target.value,10)));
-    document.getElementById('dlOneFileBtn').addEventListener('click', downloadRangeAsOneFile);
-    document.getElementById('dlPlaylistBtn').addEventListener('click', downloadRangeAsPlaylist);
-    loadQualitySegments(vodState.qualityIdx);
-  }
-}
-
-async function loadQualitySegments(idx){
-  if(!vodState) return;
-  vodState.qualityIdx = idx;
-  vodState.segments = null;
-  const area = document.getElementById('sliderArea');
-  area.innerHTML = `<div class="slider-loading">тяну список сегментов...</div>`;
-  setDlButtonsEnabled(false);
-
-  const q = vodState.qualities[idx];
-  try{
-    const res = await proxiedFetch(q.url);
-    if(!res.ok) throw new Error('http '+res.status);
-    const text = await res.text();
-    const parsed = parseVariantPlaylist(text, q.url);
-    if(!parsed.segments.length) throw new Error('плейлист пуст');
-    vodState.segments = parsed.segments;
-    vodState.total = parsed.total;
-    vodState.start = 0;
-    vodState.end = parsed.total;
-    buildSlider();
-    setDlButtonsEnabled(true);
-  }catch(err){
-    area.innerHTML = `<div class="slider-loading">не удалось загрузить сегменты для этого качества: ${escapeHtml(err.message)}</div>`;
-  }
-}
-
-function setDlButtonsEnabled(on){
-  const b1 = document.getElementById('dlOneFileBtn');
-  const b2 = document.getElementById('dlPlaylistBtn');
-  if(b1) b1.disabled = !on;
-  if(b2) b2.disabled = !on;
-}
-
-function parseVariantPlaylist(text, playlistUrl){
-  const base = playlistUrl.slice(0, playlistUrl.lastIndexOf('/')+1);
-  const lines = text.split('\n').map(l=>l.trim());
-  const segments = [];
-  let cursor = 0;
-  let pendingDuration = null;
-  for(let i=0;i<lines.length;i++){
-    const line = lines[i];
-    if(line.startsWith('#EXTINF:')){
-      const m = line.match(/#EXTINF:([\d.]+)/);
-      pendingDuration = m ? parseFloat(m[1]) : 0;
-      continue;
-    }
-    if(line && !line.startsWith('#')){
-      if(pendingDuration == null) continue;
-      const url = /^https?:\/\//i.test(line) ? line : base + line;
-      segments.push({ start: cursor, duration: pendingDuration, url });
-      cursor += pendingDuration;
-      pendingDuration = null;
-    }
-  }
-  return { segments, total: cursor };
-}
-
-function formatHMS(totalSec){
-  totalSec = Math.max(0, Math.round(totalSec || 0));
-  const h = Math.floor(totalSec/3600);
-  const m = Math.floor((totalSec%3600)/60);
-  const s = totalSec%60;
-  const pad = n => String(n).padStart(2,'0');
-  return `${pad(h)}h${pad(m)}m${pad(s)}s`;
-}
-
-function parseHMS(str){
-  if(!str) return null;
-  str = str.trim().toLowerCase();
-  let m = str.match(/^(\d+)h(\d+)m(\d+)s$/);
-  if(m) return (+m[1])*3600 + (+m[2])*60 + (+m[3]);
-  m = str.match(/^(\d+):(\d+):(\d+)$/);
-  if(m) return (+m[1])*3600 + (+m[2])*60 + (+m[3]);
-  m = str.match(/^(\d+):(\d+)$/);
-  if(m) return (+m[1])*60 + (+m[2]);
-  if(/^\d+$/.test(str)) return +str;
-  return null;
-}
-
-function buildSlider(){
-  const area = document.getElementById('sliderArea');
-  area.innerHTML = `<div class="slider-wrap" id="sliderWrap">
-      <div class="slider-track"></div>
-      <div class="slider-range" id="sliderRange"></div>
-      <div class="slider-thumb start" id="thumbStart"></div>
-      <div class="slider-thumb end" id="thumbEnd"></div>
-      <div class="slider-tag start" id="tagStart"><input id="inputStart"></div>
-      <div class="slider-tag end" id="tagEnd"><input id="inputEnd"></div>
-    </div>`;
-
-  document.getElementById('inputStart').addEventListener('change', e=>{
-    const v = parseHMS(e.target.value);
-    if(v != null) setRange(v, null); else e.target.value = formatHMS(vodState.start);
-  });
-  document.getElementById('inputEnd').addEventListener('change', e=>{
-    const v = parseHMS(e.target.value);
-    if(v != null) setRange(null, v); else e.target.value = formatHMS(vodState.end);
-  });
-
-  attachDrag('thumbStart', true);
-  attachDrag('thumbEnd', false);
-  positionThumbs();
-}
-
-function setRange(start, end){
-  const minGap = vodState.total > 1 ? 1 : 0;
-  if(start != null){
-    start = Math.max(0, Math.min(start, vodState.total));
-    if(start > vodState.end - minGap) start = Math.max(0, vodState.end - minGap);
-    vodState.start = start;
-  }
-  if(end != null){
-    end = Math.max(0, Math.min(end, vodState.total));
-    if(end < vodState.start + minGap) end = Math.min(vodState.total, vodState.start + minGap);
-    vodState.end = end;
-  }
-  positionThumbs();
-}
-
-function positionThumbs(){
-  const wrap = document.getElementById('sliderWrap');
-  if(!wrap) return;
-  const total = vodState.total || 1;
-  const thumbW = 24;
-  const usable = Math.max(0, wrap.clientWidth - thumbW);
-  const xStart = (vodState.start/total) * usable;
-  const xEnd = (vodState.end/total) * usable;
-
-  document.getElementById('thumbStart').style.left = xStart + 'px';
-  document.getElementById('thumbEnd').style.left = xEnd + 'px';
-  document.getElementById('sliderRange').style.left = (xStart + thumbW/2) + 'px';
-  document.getElementById('sliderRange').style.width = Math.max(0, xEnd - xStart) + 'px';
-
-  const wrapWidth = wrap.clientWidth;
-  const tagStart = document.getElementById('tagStart');
-  const tagEnd = document.getElementById('tagEnd');
-  tagStart.style.left = Math.min(Math.max(xStart + thumbW/2, 38), wrapWidth-38) + 'px';
-  tagEnd.style.left = Math.min(Math.max(xEnd + thumbW/2, 38), wrapWidth-38) + 'px';
-
-  const inputStart = document.getElementById('inputStart');
-  const inputEnd = document.getElementById('inputEnd');
-  if(document.activeElement !== inputStart) inputStart.value = formatHMS(vodState.start);
-  if(document.activeElement !== inputEnd) inputEnd.value = formatHMS(vodState.end);
-}
-
-function attachDrag(thumbId, isStart){
-  const thumb = document.getElementById(thumbId);
-  thumb.addEventListener('pointerdown', e=>{
-    e.preventDefault();
-    thumb.setPointerCapture(e.pointerId);
-    const wrap = document.getElementById('sliderWrap');
-    const thumbW = 24;
-
-    function onMove(ev){
-      const rect = wrap.getBoundingClientRect();
-      const usable = Math.max(0, rect.width - thumbW);
-      let x = ev.clientX - rect.left - thumbW/2;
-      x = Math.max(0, Math.min(x, usable));
-      const t = (usable > 0 ? x/usable : 0) * vodState.total;
-      if(isStart) setRange(t, null); else setRange(null, t);
-    }
-    function onUp(){
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
-    }
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp);
-  });
-}
-
-window.addEventListener('resize', ()=>{ if(vodState && vodState.segments) positionThumbs(); });
-
-function segmentsInRange(start, end){
-  if(!vodState || !vodState.segments) return [];
-  return vodState.segments.filter(seg => seg.start < end && (seg.start + seg.duration) > start);
-}
-
-async function downloadRangeAsOneFile(){
-  if(!vodState || !vodState.segments) return;
-  const segs = segmentsInRange(vodState.start, vodState.end);
-  if(!segs.length){ alert('в выбранном диапазоне нет сегментов'); return; }
-
-  const btn1 = document.getElementById('dlOneFileBtn');
-  const btn2 = document.getElementById('dlPlaylistBtn');
-  btn1.disabled = true; btn2.disabled = true;
-  const box = document.getElementById('progressBox');
-  const fill = document.getElementById('progressFill');
-  const label = document.getElementById('progressLabel');
-  box.classList.add('show');
-  fill.style.width = '0%';
-
-  const chunks = new Array(segs.length);
-  let done = 0;
-  let nextIdx = 0;
-  let failed = null;
-  const concurrency = 5;
-
-  async function worker(){
-    while(nextIdx < segs.length && !failed){
-      const idx = nextIdx++;
-      try{
-        const res = await proxiedFetch(segs[idx].url);
-        if(!res.ok) throw new Error('http '+res.status);
-        chunks[idx] = await res.arrayBuffer();
-      }catch(e){
-        failed = e;
-        return;
-      }
-      done++;
-      const pct = Math.round(done/segs.length*100);
-      fill.style.width = pct+'%';
-      label.textContent = `качаю сегменты: ${done}/${segs.length} (${pct}%)`;
-    }
-  }
-
-  try{
-    await Promise.all(Array.from({length: Math.min(concurrency, segs.length)}, worker));
-    if(failed) throw failed;
-    label.textContent = 'склеиваю файл...';
-    const blob = new Blob(chunks, { type: 'video/mp2t' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const safeName = (vodState.title || ('vod_'+vodState.id)).replace(/[\\/:*?"<>|]/g,'_').slice(0,80);
-    a.href = url;
-    a.download = `${safeName}_${formatHMS(vodState.start)}-${formatHMS(vodState.end)}.ts`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url), 30000);
-    label.textContent = 'готово — файл должен начать скачиваться (.ts, открывается в VLC/большинстве плееров)';
-    fill.style.width = '100%';
-  }catch(e){
-    label.textContent = 'не получилось докачать: ' + e.message + '. Попробуй уменьшить диапазон или используй «обрезанный .m3u8».';
-  }finally{
-    btn1.disabled = false; btn2.disabled = false;
-  }
-}
-
-function downloadRangeAsPlaylist(){
-  if(!vodState || !vodState.segments) return;
-  const segs = segmentsInRange(vodState.start, vodState.end);
-  if(!segs.length){ alert('в выбранном диапазоне нет сегментов'); return; }
-
-  const targetDuration = Math.ceil(Math.max(...segs.map(s=>s.duration)));
-  let m3u8 = `#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:${targetDuration}\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXT-X-MEDIA-SEQUENCE:0\n`;
-  for(const s of segs) m3u8 += `#EXTINF:${s.duration.toFixed(3)},\n${s.url}\n`;
-  m3u8 += `#EXT-X-ENDLIST\n`;
-
-  const blob = new Blob([m3u8], { type:'application/vnd.apple.mpegurl' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const safeName = (vodState.title || ('vod_'+vodState.id)).replace(/[\\/:*?"<>|]/g,'_').slice(0,80);
-  a.href = url;
-  a.download = `${safeName}_${formatHMS(vodState.start)}-${formatHMS(vodState.end)}.m3u8`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 30000);
-}
-
-function escapeHtml(s){
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-</script>
-
+<!-- Скрипты подключаем в правильном порядке -->
+<script src="js/i18n.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/app.js"></script>
+<script src="js/twitch.js"></script>
+<script src="js/soundcloud.js"></script>
 </body>
 </html>
