@@ -87,6 +87,7 @@ function switchService(svc){
   localStorage.setItem('hb_service', svc);
   document.getElementById('svcTwitch').classList.toggle('active', svc === 'twitch');
   document.getElementById('svcSoundcloud').classList.toggle('active', svc === 'soundcloud');
+  document.getElementById('svcYoutube').classList.toggle('active', svc === 'youtube');
   updateServiceUI();
   hideResult();
   urlInput.value = '';
