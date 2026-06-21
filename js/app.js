@@ -103,6 +103,8 @@ function updateServiceUI(){
     urlInput.placeholder = t('input_placeholder_sc');
     wrap.classList.add('sc-mode');
     goBtn.classList.add('sc-mode');
+    wrap.classList.remove('yt-mode');
+    goBtn.classList.remove('yt-mode');
     accent.textContent = t('tagline_sc');
     accent.style.color = 'var(--sc-orange)';
     examples.innerHTML = `
@@ -110,10 +112,25 @@ function updateServiceUI(){
       <span class="example-chip"><b data-i18n="playlists">${t('playlists')}</b> — soundcloud.com/artist/sets/name</span>
       <span class="example-chip"><b data-i18n="shorts">${t('shorts')}</b> — on.soundcloud.com/xxxxx</span>
     `;
+  } else if(currentService === 'youtube'){
+    urlInput.placeholder = 'https://www.youtube.com/watch?v=...';
+    wrap.classList.remove('sc-mode');
+    goBtn.classList.remove('sc-mode');
+    wrap.classList.add('yt-mode');
+    goBtn.classList.add('yt-mode');
+    accent.textContent = 'youtube';
+    accent.style.color = '#ff0000';
+    examples.innerHTML = `
+      <span class="example-chip"><b>video</b> — youtube.com/watch?v=...</span>
+      <span class="example-chip"><b>shorts</b> — youtube.com/shorts/...</span>
+      <span class="example-chip"><b>short link</b> — youtu.be/...</span>
+    `;
   } else {
     urlInput.placeholder = t('input_placeholder');
     wrap.classList.remove('sc-mode');
     goBtn.classList.remove('sc-mode');
+    wrap.classList.remove('yt-mode');
+    goBtn.classList.remove('yt-mode');
     accent.textContent = t('tagline_twitch');
     accent.style.color = '';
     examples.innerHTML = `
