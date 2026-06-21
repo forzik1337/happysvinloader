@@ -1,6 +1,6 @@
 # 🎬 happysvinloader
 
-> Самый пиздатый сайт для скачивания VOD и клипов с Twitch.
+> Самый пиздатый сайт для скачивания всякой всячины с интернетов
 
 **🌐 Сайт:** [happysvinloader.pages.dev](https://happysvinloader.pages.dev)
 
@@ -14,15 +14,19 @@
 - Скачивать клипы в разных качествах
 - Скачивать VOD целиком или нарезать нужный кусок прямо в браузере
 - Работает через CORS-прокси на Cloudflare Workers — без него Twitch CDN блокирует запросы из браузера
+- Скачивать музыку с SoundCloud
+- Скачивать плейлисты/альбомы с SoundCloud
 
 ---
 
 ## Как пользоваться
 
 1. Открой [happysvinloader.pages.dev](https://happysvinloader.pages.dev)
-2. Вставь ссылку на VOD или клип:
+2. Вставь ссылку на VOD, клип, песню, плейлист
    - `https://www.twitch.tv/videos/1234567890`
    - `https://www.twitch.tv/канал/clip/НазваниеКлипа`
+   - `soundcloud.com/artist/track`
+   - `soundcloud.com/artist/sets/name`
 3. Выбери качество и скачай
 
 ---
