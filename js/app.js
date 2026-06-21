@@ -132,9 +132,6 @@ function setTheme(theme){
   applyTheme(theme);
 }
 
-// ===== PROXY =====
-const DEFAULT_PROXY = 'https://super-block-092b.gameforzi2000.workers.dev/?url=';
-let PROXY_BASE = DEFAULT_PROXY;
 
 function selectProxy(mode){
   ['proxyDefaultOpt','proxyCustomOpt','proxyOffOpt'].forEach(id => 
@@ -325,8 +322,7 @@ async function handleGo(){
   }
 }
 
-// ===== INIT =====
-let urlInput, goBtn, result, clearBtn, pasteBtn;
+
 
 document.addEventListener('DOMContentLoaded', () => {
   urlInput = document.getElementById('urlInput');
