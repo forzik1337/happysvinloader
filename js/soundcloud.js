@@ -1,43 +1,48 @@
 // ===== SOUNDCLOUD LOGIC =====
 let scClientIdCache = localStorage.getItem('hb_sc_client_id') || null;
 
+// ===== ИСПРАВЛЕННАЯ ВЕРСИЯ: параллельный поиск client_id вместо последовательного =====
+// Замени старую функцию fetchSoundcloudClientId() в своём soundcloud.js на эту.
+
 async function fetchSoundcloudClientId(){
   if(scClientIdCache) return scClientIdCache;
   if(!PROXY_BASE) throw new Error(t('sc_need_proxy'));
-  
+
   try{
     const res = await proxiedFetch('https://soundcloud.com/');
     const html = await res.text();
     const scriptMatches = html.match(/https:\/\/a-v2\.sndcdn\.com\/assets\/[^"'\s]+\.js/g) || [];
     console.log(`Found ${scriptMatches.length} SoundCloud JS files`);
-    
-    for(const jsUrl of scriptMatches){
-      try{
-        const jsRes = await proxiedFetch(jsUrl);
-        const js = await jsRes.text();
-        const patterns = [
-          /client_id\s*[:=]\s*["']([a-zA-Z0-9]{32})["']/,
-          /clientId\s*[:=]\s*["']([a-zA-Z0-9]{32})["']/,
-          /["']client_id["']\s*:\s*["']([a-zA-Z0-9]{32})["']/,
-          /CLIENT_ID\s*[:=]\s*["']([a-zA-Z0-9]{32})["']/
-        ];
-        for(const pattern of patterns){
-          const m = js.match(pattern);
-          if(m){
-            scClientIdCache = m[1];
-            localStorage.setItem('hb_sc_client_id', scClientIdCache);
-            console.log(`Using client_id: ${scClientIdCache}`);
-            return scClientIdCache;
-          }
-        }
-      }catch(e){ 
-        console.warn(`Failed to load JS ${jsUrl}:`, e); 
+
+    const patterns = [
+      /client_id\s*[:=]\s*["']([a-zA-Z0-9]{32})["']/,
+      /clientId\s*[:=]\s*["']([a-zA-Z0-9]{32})["']/,
+      /["']client_id["']\s*:\s*["']([a-zA-Z0-9]{32})["']/,
+      /CLIENT_ID\s*[:=]\s*["']([a-zA-Z0-9]{32})["']/
+    ];
+
+    // запускаем поиск во всех файлах ПАРАЛЛЕЛЬНО — берём первый успешный результат,
+    // вместо того чтобы ждать каждый файл по очереди
+    const found = await Promise.any(scriptMatches.map(async jsUrl => {
+      const jsRes = await proxiedFetch(jsUrl);
+      const js = await jsRes.text();
+      for(const pattern of patterns){
+        const m = js.match(pattern);
+        if(m) return m[1];
       }
+      throw new Error('not found in this file');
+    })).catch(() => null);
+
+    if(found){
+      scClientIdCache = found;
+      localStorage.setItem('hb_sc_client_id', found);
+      console.log(`Using client_id: ${found}`);
+      return found;
     }
-  }catch(e){ 
-    console.error('Failed to fetch soundcloud.com:', e); 
+  }catch(e){
+    console.error('Failed to fetch soundcloud.com:', e);
   }
-  
+
   throw new Error('не удалось получить актуальный client_id SoundCloud');
 }
 
