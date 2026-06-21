@@ -155,25 +155,6 @@
   <span>загрузить cookies</span>
 </button>
 
-<script>
-async function loadCookiesFromFile() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.txt';
-  input.onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const text = await file.text();
-    try {
-      await uploadCookies(text);
-      alert('✓ Cookies загружены для всех пользователей!');
-    } catch (err) {
-      alert('Ошибка: ' + err.message);
-    }
-  };
-  input.click();
-}
-</script>
   
   <div class="input-row">
     <div class="input-wrap" id="inputWrap">
