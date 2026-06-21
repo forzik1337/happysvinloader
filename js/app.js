@@ -230,3 +230,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+async function handleGo(){
+  const raw = urlInput.value;
+  
+  // YouTube
+  if(isYoutubeUrl(raw)){
+    setLoading(true);
+    hideResult();
+    showStatus('тяну данные с youtube...');
+    try {
+      await resolveYoutube(raw);  // <-- ВОТ ЭТА ФУНКЦИЯ!
+    } catch(err) {
+      showStatus('не получилось: ' + err.message, true);
+    } finally {
+      setLoading(false);
+    }
+    return;
+  }
+  
+  // Остальной код для Twitch и SoundCloud...
+}
