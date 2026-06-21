@@ -4,7 +4,7 @@ const YOUTUBE_BACKEND = 'https://happysvinyoutube.bounceme.net';
 async function resolveYoutube(videoId) {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
 
-  showStatus(t('loading_yt') || 'получаем инфо о видео...');
+  showStatus('получаем инфо о видео...');
 
   const res = await fetch(`${YOUTUBE_BACKEND}/api/info`, {
     method: 'POST',
@@ -21,7 +21,9 @@ async function resolveYoutube(videoId) {
 function showYoutubeResult(url, data) {
   const { title, thumbnail, author, duration, formats } = data;
 
-  const mins = duration ? Math.floor(duration / 60) + ':' + String(duration % 60).padStart(2, '0') : '';
+  const mins = duration
+    ? Math.floor(duration / 60) + ':' + String(duration % 60).padStart(2, '0')
+    : '';
 
   const fmtRows = formats.map(f => `
     <button class="fmt-row yt-fmt-btn" onclick="downloadYoutube('${url}', '${f.format_id}', false)">
@@ -49,12 +51,11 @@ function showYoutubeResult(url, data) {
       </div>
     </div>`;
 
-  result.classList.add('visible');
-  hideStatus();
+  result.classList.add('show');
 }
 
 async function downloadYoutube(url, formatId, audioOnly) {
-  showStatus(t('loading_yt_dl') || 'скачиваем видео, подожди...');
+  showStatus('скачиваем видео, подожди...');
 
   try {
     const res = await fetch(`${YOUTUBE_BACKEND}/api/download`, {
@@ -68,11 +69,12 @@ async function downloadYoutube(url, formatId, audioOnly) {
       throw new Error(err.error || `HTTP ${res.status}`);
     }
 
-    // получаем файл как blob и запускаем скачивание
     const blob = await res.blob();
     const disposition = res.headers.get('Content-Disposition') || '';
     const nameMatch = disposition.match(/filename\*?=(?:UTF-8'')?["']?([^"';\n]+)/i);
-    const filename = nameMatch ? decodeURIComponent(nameMatch[1]) : (audioOnly ? 'audio.mp3' : 'video.mp4');
+    const filename = nameMatch
+      ? decodeURIComponent(nameMatch[1])
+      : (audioOnly ? 'audio.mp3' : 'video.mp4');
 
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -80,16 +82,9 @@ async function downloadYoutube(url, formatId, audioOnly) {
     a.click();
     URL.revokeObjectURL(a.href);
 
-    hideStatus();
+    // восстанавливаем карточку с форматами после скачивания
+    result.classList.add('show');
   } catch(err) {
-    showStatus((t('err_generic') || 'ошибка: ') + err.message, true);
+    showStatus('ошибка: ' + err.message, true);
   }
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
 }
