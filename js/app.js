@@ -159,6 +159,81 @@ function parseUrl(raw){
   if(m) return { service: 'youtube', type: 'video', id: m[1] };
   return null;
 }
+// ===== YOUTUBE FUNCTIONS =====
+async function resolveYoutube(url) {
+  const info = await ytFetchInfo(url);
+  window._ytCurrentVideo = { url, info };
+  renderYoutubeResult(info, url);
+}
+
+function renderYoutubeResult(info, url) {
+  const title = info.title || 'без названия';
+  const author = info.author || '';
+  const duration = info.duration || 0;
+  const thumb = info.thumbnail || '';
+  const formats = info.formats || [];
+  const isLive = info.is_live || false;
+  
+  let durationText = '';
+  if (isLive) {
+    durationText = '🔴 LIVE';
+  } else if (duration > 0) {
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    if (hours > 0) {
+      durationText = `${hours} ч ${minutes} мин`;
+    } else {
+      durationText = `${minutes} мин`;
+    }
+  }
+  
+  let html = `<div class="preview-card">
+    <img class="preview-thumb rect" src="${thumb}" onerror="this.style.display='none'">
+    <div class="preview-info">
+      <div class="preview-title">${escapeHtml(title)}</div>
+      <div class="preview-meta">${escapeHtml(author)}${durationText ? ' · ' + durationText : ''}</div>
+    </div>
+  </div>
+  <div class="quality-list">`;
+  
+  html += `<div class="quality-row">
+    <div><div class="label">🎵 Аудио (MP3)</div></div>
+    <button class="dl-btn" onclick="downloadYoutubeFormat('mp3')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      скачать
+    </button>
+  </div>`;
+  
+  if (formats.length === 0) {
+    html += `<div class="status-msg error">Нет доступных форматов. ${isLive ? 'Прямой эфир может быть недоступен.' : 'Попробуй загрузить cookies.'}</div>`;
+  } else {
+    for (const fmt of formats) {
+      html += `<div class="quality-row">
+        <div><div class="label">${fmt.label} MP4</div></div>
+        <button class="dl-btn" onclick="downloadYoutubeFormat('${fmt.format_id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          скачать
+        </button>
+      </div>`;
+    }
+  }
+  
+  html += `</div>`;
+  
+  result.innerHTML = html;
+  result.classList.add('show');
+}
+
+function downloadYoutubeFormat(formatId) {
+  if (!window._ytCurrentVideo) return;
+  const { url } = window._ytCurrentVideo;
+  const isAudio = formatId === 'mp3';
+  ytDownload(url, isAudio ? null : formatId, isAudio, (status) => {
+    console.log(status);
+  }).catch(err => {
+    alert('Ошибка скачивания: ' + err.message);
+  });
+}
 
 async function handleGo(){
   const raw = urlInput.value;
