@@ -3,6 +3,8 @@
 > Самый пиздатый сайт для скачивания всякой всячины с интернетов
 
 **🌐 Сайт:** [happysvinloader.pages.dev](https://happysvinloader.pages.dev)
+**🌐 Сайт (для России):** [forzik1337.github.io/happysvinloader](https://forzik1337.github.io/happysvinloader/)
+
 
 ---
 
