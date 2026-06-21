@@ -1,115 +1,138 @@
-// ===== YOUTUBE =====
-const YOUTUBE_BACKEND = 'https://happysvinyoutube.bounceme.net';
+// youtube.js — фронтенд-обвязка для скачивания YouTube-видео
+// Работает в связке с твоим собственным backend-сервером (server.py),
+// который запускает yt-dlp. GitHub Pages сам этот сервер не запустит —
+// его нужно задеплоить отдельно (Render/Railway/PythonAnywhere) и вписать
+// адрес ниже в BACKEND_URL.
 
-async function resolveYoutube(videoId) {
-  const url = `https://www.youtube.com/watch?v=${videoId}`;
+const BACKEND_URL = "https://happysvinyoutube.bounceme.net"; // <-- замени на реальный адрес после деплоя
 
-  showStatus('получаем инфо о видео...');
+function isYoutubeUrl(raw) {
+  return /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/|youtube\.com\/live\/|youtube\.com\/embed\/|youtube\.com\/v\/)/i.test(raw);
+}
 
-  const res = await fetch(`${YOUTUBE_BACKEND}/api/info`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url })
+async function ytFetchInfo(url) {
+  const res = await fetch(`${BACKEND_URL}/api/info`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url }),
+  });
+  
+  // Проверяем что получили JSON, а не HTML
+  const contentType = res.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    const text = await res.text();
+    console.error("Сервер вернул не JSON:", text.substring(0, 200));
+    throw new Error("Сервер недоступен или возвращает HTML. Проверь что Flask запущен и Caddy настроен правильно.");
+  }
+  
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "не удалось получить данные о видео");
+  return data;
+}
+
+function ytBuildDownloadUrl() {
+  // скачивание идёт через POST, поэтому прямой ссылки нет —
+  // используем функцию ниже, которая делает запрос и сама запускает download
+  return null;
+}
+
+async function ytDownload(url, formatId, audioOnly, onStatus) {
+  onStatus && onStatus("скачиваю на сервере, это может занять время...");
+  const res = await fetch(`${BACKEND_URL}/api/download`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url, format_id: formatId, audio_only: audioOnly }),
   });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  if (!res.ok) {
+    let msg = "ошибка скачивания";
+    try {
+      const data = await res.json();
+      msg = data.error || msg;
+    } catch (e) {}
+    throw new Error(msg);
+  }
 
-  showYoutubeResult(url, data);
+  const blob = await res.blob();
+  const disposition = res.headers.get("Content-Disposition") || "";
+  const match = disposition.match(/filename="?([^"]+)"?/);
+  const filename = match ? match[1] : "video.mp4";
+
+  const blobUrl = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = blobUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(blobUrl);
 }
 
-function showYoutubeResult(url, data) {
-  const { title, thumbnail, author, duration, formats } = data;
-
-  const mins = duration
-    ? Math.floor(duration / 60) + ':' + String(duration % 60).padStart(2, '0')
-    : '';
-
-  const fmtRows = formats.map(f => `
-    <button class="fmt-row yt-fmt-btn" onclick="downloadYoutube('${url}', '${f.format_id}', false)">
-      <span class="fmt-quality">${f.label}</span>
-      <span class="fmt-ext">mp4</span>
-      <svg class="fmt-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>`).join('');
-
-  result.innerHTML = `
-    <div class="yt-result">
-      ${thumbnail ? `<img class="yt-thumb" src="${thumbnail}" alt="thumbnail">` : ''}
-      <div class="yt-title">${escapeHtml(title)}</div>
-      ${author ? `<div class="yt-author">${escapeHtml(author)}${mins ? ' · ' + mins : ''}</div>` : ''}
-      <div class="fmt-list">
-        ${fmtRows}
-        <button class="fmt-row yt-fmt-btn" onclick="downloadYoutube('${url}', '', true)">
-          <span class="fmt-quality">аудио</span>
-          <span class="fmt-ext">mp3</span>
-          <svg class="fmt-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-    </div>`;
-
-  result.classList.add('show');
-}
-
-async function downloadYoutube(url, formatId, audioOnly) {
-  showStatus('скачиваем видео, подожди...');
-
-  try {
-    const res = await fetch(`${YOUTUBE_BACKEND}/api/download`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, format_id: formatId, audio_only: audioOnly })
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || `HTTP ${res.status}`);
+async function ytDownload(url, formatId, audioOnly, onStatus) {
+  onStatus && onStatus("скачиваю на сервере, это может занять время...");
+  
+  const res = await fetch(`${BACKEND_URL}/api/download`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url, format_id: formatId, audio_only: audioOnly }),
+  });
+  
+  // Проверяем что получили файл, а не HTML ошибку
+  const contentType = res.headers.get("content-type");
+  if (contentType && contentType.includes("text/html")) {
+    const text = await res.text();
+    console.error("Сервер вернул HTML:", text.substring(0, 200));
+    throw new Error("Сервер недоступен. Проверь Flask и Caddy.");
+  }
+  
+  if (!res.ok) {
+    let msg = "ошибка скачивания";
+    try {
+      const data = await res.json();
+      msg = data.error || msg;
+    } catch (e) {
+      const text = await res.text();
+      console.error("Ответ сервера:", text.substring(0, 200));
     }
-
-    const blob = await res.blob();
-    const disposition = res.headers.get('Content-Disposition') || '';
-    const nameMatch = disposition.match(/filename\*?=(?:UTF-8'')?["']?([^"';\n]+)/i);
-    const filename = nameMatch
-      ? decodeURIComponent(nameMatch[1])
-      : (audioOnly ? 'audio.mp3' : 'video.mp4');
-
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(a.href);
-
-    // восстанавливаем карточку с форматами после скачивания
-    result.classList.add('show');
-  } catch(err) {
-    showStatus('ошибка: ' + err.message, true);
+    throw new Error(msg);
   }
+  
+  const blob = await res.blob();
+  const disposition = res.headers.get("Content-Disposition") || "";
+  const match = disposition.match(/filename="?([^"]+)"?/);
+  const filename = match ? match[1] : "video.mp4";
+  const blobUrl = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = blobUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(blobUrl);
 }
 
-document.getElementById('loadCookiesBtn').onclick = async () => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.txt';
-  input.onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const text = await file.text();
-    localStorage.setItem('yt_cookies', text);
-    alert('Cookies загружены! Попробуй снова.');
-  };
-  input.click();
-};
-
-// Показываем кнопку только для YouTube
-function updateServiceUI() {
-  // ... существующий код ...
-  const loadCookiesBtn = document.getElementById('loadCookiesBtn');
-  if (currentService === 'youtube') {
-    loadCookiesBtn.style.display = 'flex';
-  } else {
-    loadCookiesBtn.style.display = 'none';
-  }
+async function ytFetchInfo(url) {
+  // Проверяем есть ли сохранённые cookies
+  const savedCookies = localStorage.getItem('yt_cookies');
+  
+  const res = await fetch(`${BACKEND_URL}/api/info`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      url,
+      cookies: savedCookies || null
+    }),
+  });
+  
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "не удалось получить данные о видео");
+  return data;
 }
+// Пример встраивания в общий обработчик ссылки (handleGo) в твоём app.js:
+//
+// if (isYoutubeUrl(raw)) {
+//   const info = await ytFetchInfo(raw);
+//   // отрисовать превью + список форматов из info.formats,
+//   // на клик по кнопке скачивания вызвать:
+//   // ytDownload(raw, formatId, false, statusCallback)
+// }
