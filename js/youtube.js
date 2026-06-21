@@ -164,6 +164,31 @@ async function uploadCookies(cookiesText) {
 
 // Вызываем проверку при загрузке
 checkCookiesStatus();
+
+function formatDuration(seconds) {
+  if (!seconds) return '';
+  
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  
+  if (hours > 0) {
+    return `${hours} ч ${minutes} мин`;
+  } else {
+    return `${minutes} мин`;
+  }
+}
+
+// Используй эту функцию при отображении длительности
+async function ytFetchInfo(url) {
+  // ... существующий код ...
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "не удалось получить данные о видео");
+  
+  // Добавляем отформатированную длительность
+  data.durationFormatted = formatDuration(data.duration);
+  return data;
+}
+
 // Пример встраивания в общий обработчик ссылки (handleGo) в твоём app.js:
 //
 // if (isYoutubeUrl(raw)) {
