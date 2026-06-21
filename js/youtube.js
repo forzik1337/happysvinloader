@@ -272,6 +272,64 @@ async function ytFetchInfo(url) {
   return data;
 }
 
+// ===== ДОБАВЬ ЭТИ ФУНКЦИИ В КОНЕЦ youtube.js =====
+
+async function resolveYoutube(url) {
+  const info = await ytFetchInfo(url);
+  window._ytCurrentVideo = { url, info };
+  renderYoutubeResult(info);
+}
+
+function renderYoutubeResult(info) {
+  const title = info.title || 'без названия';
+  const author = info.author || '';
+  const duration = info.duration || 0;
+  const thumb = info.thumbnail || '';
+  const formats = info.formats || [];
+  
+  const hours = Math.floor(duration / 3600);
+  const minutes = Math.floor((duration % 3600) / 60);
+  const durationText = hours > 0 ? `${hours} ч ${minutes} мин` : `${minutes} мин`;
+  
+  let html = `<div class="preview-card">
+    <img class="preview-thumb rect" src="${thumb}" onerror="this.style.display='none'">
+    <div class="preview-info">
+      <div class="preview-title">${escapeHtml(title)}</div>
+      <div class="preview-meta">${escapeHtml(author)} · ${durationText}</div>
+    </div>
+  </div>
+  <div class="quality-list">`;
+  
+  if (formats.length === 0) {
+    html += `<div class="status-msg error">Нет доступных форматов</div>`;
+  } else {
+    for (const fmt of formats) {
+      html += `<div class="quality-row">
+        <div><div class="label">${fmt.label}</div></div>
+        <button class="dl-btn" onclick="downloadYoutubeFormat('${fmt.format_id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          скачать
+        </button>
+      </div>`;
+    }
+  }
+  
+  html += `</div>`;
+  
+  result.innerHTML = html;
+  result.classList.add('show');
+}
+
+function downloadYoutubeFormat(formatId) {
+  if (!window._ytCurrentVideo) return;
+  const { url } = window._ytCurrentVideo;
+  ytDownload(url, formatId, false, (status) => {
+    console.log(status);
+  }).catch(err => {
+    alert('Ошибка: ' + err.message);
+  });
+}
+
 // Пример встраивания в общий обработчик ссылки (handleGo) в твоём app.js:
 //
 // if (isYoutubeUrl(raw)) {
