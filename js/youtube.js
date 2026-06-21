@@ -88,3 +88,28 @@ async function downloadYoutube(url, formatId, audioOnly) {
     showStatus('ошибка: ' + err.message, true);
   }
 }
+
+document.getElementById('loadCookiesBtn').onclick = async () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.txt';
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const text = await file.text();
+    localStorage.setItem('yt_cookies', text);
+    alert('Cookies загружены! Попробуй снова.');
+  };
+  input.click();
+};
+
+// Показываем кнопку только для YouTube
+function updateServiceUI() {
+  // ... существующий код ...
+  const loadCookiesBtn = document.getElementById('loadCookiesBtn');
+  if (currentService === 'youtube') {
+    loadCookiesBtn.style.display = 'flex';
+  } else {
+    loadCookiesBtn.style.display = 'none';
+  }
+}
