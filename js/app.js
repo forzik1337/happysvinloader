@@ -135,6 +135,10 @@ function parseUrl(raw){
   if(m) return { service: 'soundcloud', type: 'track', url: 'https://' + m[0] };
   m = raw.match(/on\.soundcloud\.com\/[A-Za-z0-9]+/i);
   if(m) return { service: 'soundcloud', type: 'track', url: 'https://' + m[0] };
+  m = raw.match(/(?:youtube\.com\/watch\?.*v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  if(m) return { service: 'youtube', type: 'video', id: m[1] };
+  m = raw.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{11})/);
+  if(m) return { service: 'youtube', type: 'video', id: m[1] };
   return null;
 }
 
@@ -151,6 +155,7 @@ async function handleGo(){
   showStatus(parsed.service === 'soundcloud' ? t('loading_sc') : t('loading'));
   try{
     if(parsed.service === 'soundcloud') await resolveSoundcloud(parsed.url);
+    else if(parsed.service === 'youtube') await resolveYoutube(parsed.id);
     else if(parsed.type === 'clip') await resolveClip(parsed.slug);
     else await resolveVod(parsed.id);
   }catch(err){
