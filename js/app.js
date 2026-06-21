@@ -47,7 +47,7 @@ const TRANSLATIONS = {
   },
   en: {
     settings:'settings', proxy_title:'proxy', proxy_default:'default',
-    proxy_custom:'custom proxy', proxy_custom_sub:'paste your worker url',proxyused:'default proxy',
+    proxy_custom:'custom proxy', proxy_custom_sub:'paste your worker url', proxyused:'default proxy',
     proxy_off:'disabled', proxy_off_sub:'trim slider and single-file download won\'t work',
     save:'save', theme_title:'theme', theme_dark:'dark', theme_light:'light', theme_auto:'system',
     lang_title:'язык / language', nav_download:'download', nav_settings:'settings',
@@ -132,6 +132,8 @@ function setTheme(theme){
   applyTheme(theme);
 }
 
+// ===== PROXY =====
+// DEFAULT_PROXY, PROXY_BASE объявлены в utils.js
 
 function selectProxy(mode){
   ['proxyDefaultOpt','proxyCustomOpt','proxyOffOpt'].forEach(id => 
@@ -322,7 +324,8 @@ async function handleGo(){
   }
 }
 
-
+// ===== INIT =====
+// urlInput, goBtn, result, clearBtn, pasteBtn объявлены в utils.js
 
 document.addEventListener('DOMContentLoaded', () => {
   urlInput = document.getElementById('urlInput');
